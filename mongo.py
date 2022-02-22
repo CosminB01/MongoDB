@@ -1,6 +1,8 @@
 import pymongo
 import sys
 import time
+from datetime import datetime
+
 
 '''
 Provides the URL to connect Python to Mongodb using Pymongo. If the mongo server is local you can use the
@@ -14,22 +16,11 @@ client = pymongo.MongoClient(conn_str, serverSelectionTimeoutMS=5000)
 #Checks if the connection was succesfully. If not, it exits the program and shows the error.
 try:
     print(client.server_info())
+
 except Exception as e:
     print(e)
     print("Unable to connect.")
     sys.exit(-1)
-
-'''
-#UNIX timestamp
-now = int(time.time())
-
-timestamp_ro = time.strftime("%d/%m/%Y")
-
-timestamp_uk = time.strftime("%d/%m/%Y")
-
-timestamp_us = time.strftime("%m-%d-%Y")
-'''
-
 
 
 #Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
@@ -108,7 +99,23 @@ empl_10 = {
     "name" : "Senna",
     "age" : 19
 }
+timestamp = int(time.time())
+print("This is the UNIX timestamp: " + str(timestamp))
+Format = datetime.fromtimestamp(timestamp)
+print("See the conversion for the UNIX timestamps from the documents down bellow: ")
+Format = time.strftime("%d/%m/%Y, %H:%M:%S")
+print(Format + " --Ro Format")
+
+Format = time.strftime("%m-%d-%Y, %H:%M:%S")
+print(Format + " -- Us Format")
+
+Format = time.strftime("%d/%m/%Y, %H:%M:%S")
+print(Format + " --Uk Format")
 
 
+for employee in db_employee.find():
+    print(employee)
+
+#print(empl_1,empl_2,empl_3,empl_4,empl_5,empl_6,empl_7,empl_8,empl_9,empl_10)
 db_employee.insert_many([empl_1, empl_2, empl_3, empl_4, empl_5, empl_6, empl_7, empl_8, empl_9, empl_10])
-#log.show_log = ("INF", empl_1, "mongo.py", 0)
+
