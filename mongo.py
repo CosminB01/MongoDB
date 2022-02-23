@@ -1,7 +1,7 @@
 import pymongo
 import sys
 import time
-from datetime import date, datetime
+from datetime import datetime
 
 
 '''
