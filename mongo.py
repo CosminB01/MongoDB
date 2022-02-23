@@ -1,7 +1,7 @@
 import pymongo
 import sys
 import time
-from datetime import datetime
+from datetime import date, datetime
 
 
 '''
@@ -99,23 +99,44 @@ empl_10 = {
     "name" : "Senna",
     "age" : 19
 }
+
+db_employee.insert_many([empl_1, empl_2, empl_3, empl_4, empl_5, empl_6, empl_7, empl_8, empl_9, empl_10])
+
 timestamp = int(time.time())
 print("This is the UNIX timestamp: " + str(timestamp))
 Format = datetime.fromtimestamp(timestamp)
 print("See the conversion for the UNIX timestamps from the documents down bellow: ")
+
+
+
 Format = time.strftime("%d/%m/%Y, %H:%M:%S")
 print(Format + " --Ro Format")
+for employee in db_employee.find():
+    db_employee.update_many({},{"$set":{"ro_time" : Format}})
+
+
 
 Format = time.strftime("%m-%d-%Y, %H:%M:%S")
 print(Format + " -- Us Format")
 
+for employee in db_employee.find():
+    db_employee.update_many({},{"$set":{"us_time" : Format}})
+
+
+
 Format = time.strftime("%d/%m/%Y, %H:%M:%S")
 print(Format + " --Uk Format")
 
+for employee in db_employee.find():
+    db_employee.update_many({},{"$set":{"uk_time" : Format}})
+
+
+
+print("Updating the documents with the specified formats....\n Please wait!")
 
 for employee in db_employee.find():
     print(employee)
 
-#print(empl_1,empl_2,empl_3,empl_4,empl_5,empl_6,empl_7,empl_8,empl_9,empl_10)
-db_employee.insert_many([empl_1, empl_2, empl_3, empl_4, empl_5, empl_6, empl_7, empl_8, empl_9, empl_10])
+
+
 
