@@ -117,7 +117,7 @@ for employee in db_employee.find():
 
 
 Format = time.strftime("%m-%d-%Y, %H:%M:%S")
-print(Format + " -- Us Format")
+print(Format + " --Us Format")
 
 for employee in db_employee.find():
     db_employee.update_many({},{"$set":{"us_time" : Format}})
@@ -136,6 +136,19 @@ print("Updating the documents with the specified formats....\n Please wait!")
 
 for employee in db_employee.find():
     print(employee)
+
+
+print("Preparing to delete the documents with the employees that have the age bigger than 30....\n")
+
+for employee in db_employee.find():
+    db_employee.delete_many({"age":{"$gt": 30}})
+
+
+print("Task finished...\nPrinting the documents...")
+
+for employee in db_employee.find({}):
+    print(employee)
+
 
 
 
