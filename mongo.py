@@ -61,7 +61,7 @@ empl_5 = {
     "timestamp_UNIX" : int(time.time()),
     "_id" : "empl0005",
     "name" : "Steve",
-    "age" : "21"
+    "age" : 21
 }
 
 empl_6 = {
@@ -144,12 +144,14 @@ for employee in db_employee.find():
     db_employee.delete_many({"age":{"$gt": 30}})
 
 
-print("Task finished...\nPrinting the documents...")
+print("Task finished...\nPrinting and sorting the documents by the age of the employees...")
 
-for employee in db_employee.find({}):
+for employee in db_employee.find({}).sort("age"):
     print(employee)
 
-#todo
+print("Task finished...\n Exiting...")
+
+
 
 
 
