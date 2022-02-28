@@ -2,7 +2,9 @@ import pymongo
 import sys
 import time
 from datetime import datetime
+import logging
 
+logging.basicConfig(level = logging.DEBUG, format = '%(asctime)s:%(levelname)s:%(message)s')
 
 '''
 Provides the URL to connect Python to Mongodb using Pymongo. If the mongo server is local you can use the
@@ -15,11 +17,10 @@ client = pymongo.MongoClient(conn_str, serverSelectionTimeoutMS=5000)
 
 #Checks if the connection was succesfully. If not, it exits the program and shows the error.
 try:
-    print(client.server_info())
-
+    logging.info(client.server_info())
 except Exception as e:
-    print(e)
-    print("Unable to connect.")
+    logging.critical(e)
+    logging.critical("Unable to connect.")
     sys.exit(-1)
 
 
@@ -100,56 +101,58 @@ empl_10 = {
     "age" : 19
 }
 
+#Inserts the dictionaries as db collections
 db_employee.insert_many([empl_1, empl_2, empl_3, empl_4, empl_5, empl_6, empl_7, empl_8, empl_9, empl_10])
 
+#Using some prints as loggers to show the UNIX time and convert it to different time formats:
 timestamp = int(time.time())
-print("This is the UNIX timestamp: " + str(timestamp))
+logging.info("This is the UNIX timestamp: " + str(timestamp))
 Format = datetime.fromtimestamp(timestamp)
-print("See the conversion for the UNIX timestamps from the documents down bellow: ")
+logging.info("See the conversion for the UNIX timestamps from the documents down bellow: ")
 
 
-
+#Conversion of UNIX to romanian date format, printing it and updating it to the collections
 Format = time.strftime("%d/%m/%Y, %H:%M:%S")
-print(Format + " --Ro Format")
+logging.info(Format + " --Ro Format")
 for employee in db_employee.find():
     db_employee.update_many({},{"$set":{"ro_time" : Format}})
 
 
-
+#Conversion of UNIX to american date format, printing it and updating it to the collections
 Format = time.strftime("%m-%d-%Y, %H:%M:%S")
-print(Format + " --Us Format")
-
+logging.info(Format + " --Us Format")
 for employee in db_employee.find():
     db_employee.update_many({},{"$set":{"us_time" : Format}})
 
 
-
+#Conversion of UNIX to british date format, printing it and updating it to the collections
 Format = time.strftime("%d/%m/%Y, %H:%M:%S")
-print(Format + " --Uk Format")
-
+logging.info(Format + " --Uk Format")
 for employee in db_employee.find():
     db_employee.update_many({},{"$set":{"uk_time" : Format}})
 
 
+logging.info("Updating the documents with the specified formats....\n Please wait!")
 
-print("Updating the documents with the specified formats....\n Please wait!")
-
+#Iterates through the documents
 for employee in db_employee.find():
-    print(employee)
+    logging.info(employee)
 
 
-print("Preparing to delete the documents with the employees that have the age bigger than 30....\n")
+logging.info("Preparing to delete the documents with the employees that have the age bigger than 30....\n")
 
+#Deletes the documents whose "age" key has values greater than 30
 for employee in db_employee.find():
     db_employee.delete_many({"age":{"$gt": 30}})
 
 
-print("Task finished...\nPrinting and sorting the documents by the age of the employees...")
+logging.info("Task finished...\nPrinting and sorting the documents by the age of the employees...")
 
+#Iterates through the documents and sorts them by age (ascending
 for employee in db_employee.find({}).sort("age"):
-    print(employee)
+    logging.info(employee)
 
-print("Task finished...\n Exiting...")
+logging.info("Task finished...\n Exiting...")
 
 
 
