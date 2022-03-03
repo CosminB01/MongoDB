@@ -1,4 +1,21 @@
+def con():
+    conn_str = "mongodb://UsvEr4VX6ShZRsqW:4tYwbrdXJYpS74TZ@localhost:27017"
+
+    # Creates a connection using pymongo.MongoClient
+    client = pymongo.MongoClient(conn_str, serverSelectionTimeoutMS=5000)
+
+    # Checks if the connection was succesfully. If not, it exits the program and shows the error.
+    try:
+        logging.info(client.server_info())
+    except Exception as e:
+        logging.critical(e)
+        logging.critical("Unable to connect.")
+        sys.exit(-1)
+
+    return client
+
 def format():
+    con()
     # Conversion of UNIX to romanian date format, printing it and updating it to the collections
     Format = time.strftime("%d/%m/%Y, %H:%M:%S")
     logging.info(Format + " --Ro Format")
@@ -20,12 +37,14 @@ def format():
     logging.info("Updating the documents with the specified formats....\n Please wait!")
 
 def iterate():
+    con()
     #Iterates through the documents
     for employee in db_employee.find():
         logging.info(employee)
     logging.info("Docs listed with succes!")
 
 def delete():
+    con()
     logging.info("Preparing to delete the documents with the employees that have the age bigger than 30....\n")
     # Deletes the documents whose "age" key has values greater than 30
     for employee in db_employee.find():
@@ -33,10 +52,12 @@ def delete():
     logging.info("Task finished!")
 
 def sort():
+    con()
     # Iterates through the documents and sorts them by age (ascending
     for employee in db_employee.find({}).sort("age"):
         logging.info(employee)
     logging.info("Task finished...\n Exiting...")
+
 
 import pymongo
 import sys
@@ -50,19 +71,8 @@ logging.basicConfig(level = logging.DEBUG, format = '%(asctime)s:%(levelname)s:%
 Provides the URL to connect Python to Mongodb using Pymongo. If the mongo server is local you can use the
 following string -- "conn_str = "mongodb://<user>:<password>@localhost:<the port that the server is listening to>
 '''
-conn_str = "mongodb://UsvEr4VX6ShZRsqW:4tYwbrdXJYpS74TZ@localhost:27017"
 
-#Creates a connection using pymongo.MongoClient
-client = pymongo.MongoClient(conn_str, serverSelectionTimeoutMS=5000)
-
-#Checks if the connection was succesfully. If not, it exits the program and shows the error.
-try:
-    logging.info(client.server_info())
-except Exception as e:
-    logging.critical(e)
-    logging.critical("Unable to connect.")
-    sys.exit(-1)
-
+client = con()
 
 #Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
 db = client.get_database("employee_list")
@@ -151,10 +161,12 @@ logging.info("This is the UNIX timestamp: " + str(timestamp))
 Format = datetime.fromtimestamp(timestamp)
 logging.info("See the conversion for the UNIX timestamps from the documents down bellow: ")
 
+con()
 format()
 iterate()
 delete()
 sort()
+
 
 
 
