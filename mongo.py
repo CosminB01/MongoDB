@@ -118,6 +118,7 @@ def format(connection):
     # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
     db_employee = db.get_collection("employees")
     # Conversion of UNIX to romanian date format, printing it and updating it to the collections
+
     Format = time.strftime("%d/%m/%Y, %H:%M:%S")
     print(Format + " --Ro Format")
     for employee in db_employee.find():
@@ -137,6 +138,7 @@ def format(connection):
 
     print("Updating the documents with the specified formats....\n Please wait!")
 
+
 def iterate(connection):
     client = connection
     # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
@@ -148,35 +150,37 @@ def iterate(connection):
         print(employee)
     print("Docs listed with succes!")
 
-def delete(connection):
+
+def delete_by_age(connection,parameter):
     client = connection
     # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
     db = client.get_database("employee_list")
     # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
     db_employee = db.get_collection("employees")
-    print("Preparing to delete the documents with the employees that have the age bigger than 30....\n")
+    print("Preparing to delete the documents with the employees that have the age bigger than {}....\n".format(parameter))
     # Deletes the documents whose "age" key has values greater than 30
     for employee in db_employee.find():
-        db_employee.delete_many({"age": {"$gt": 30}})
+        db_employee.delete_many({"age": {"$gt": int(parameter)}})
     print("Task finished!Docs deleted")
 
-def sort(connection):
+
+def sort(connection, parameter):
     client = connection
     # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
     db = client.get_database("employee_list")
     # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
     db_employee = db.get_collection("employees")
-    # Iterates through the documents and sorts them by age (ascending
-    for employee in db_employee.find({}).sort("age"):
+    for employee in db_employee.find({}).sort(parameter):
         print(employee)
     print("Task finished...\n Exiting...")
 
 connect = con()
+data(connect)
 timestamp(connect)
 format(connect)
 iterate(connect)
-delete(connect)
-sort(connect)
+delete_by_age(connect, 27)
+sort(connect, "name")
 
 
 
