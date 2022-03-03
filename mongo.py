@@ -31,81 +31,6 @@ def con():
 
     return client
 
-def timestamp(connection):
-    client = connection
-    # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
-    db = client.get_database("employee_list")
-    # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
-    db_employee = db.get_collection("employees")
-    #Using some prints as loggers to show the UNIX time and convert it to different time formats:
-    timestamp = int(time.time())
-    print("This is the UNIX timestamp: " + str(timestamp))
-    Format = datetime.fromtimestamp(timestamp)
-    print("See the conversion for the UNIX timestamps from the documents down bellow: ")
-    print('TIMESTAMP')
-
-
-def format(connection):
-    client = connection
-    # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
-    db = client.get_database("employee_list")
-    # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
-    db_employee = db.get_collection("employees")
-    # Conversion of UNIX to romanian date format, printing it and updating it to the collections
-    Format = time.strftime("%d/%m/%Y, %H:%M:%S")
-    print(Format + " --Ro Format")
-    for employee in db_employee.find():
-        db_employee.update_many({}, {"$set": {"ro_time": Format}})
-
-    # Conversion of UNIX to american date format, printing it and updating it to the collections
-    Format = time.strftime("%m-%d-%Y, %H:%M:%S")
-    print(Format + " --Us Format")
-    for employee in db_employee.find():
-        db_employee.update_many({}, {"$set": {"us_time": Format}})
-
-    # Conversion of UNIX to british date format, printing it and updating it to the collections
-    Format = time.strftime("%d/%m/%Y, %H:%M:%S")
-    print(Format + " --Uk Format")
-    for employee in db_employee.find():
-        db_employee.update_many({}, {"$set": {"uk_time": Format}})
-
-    print("Updating the documents with the specified formats....\n Please wait!")
-
-def iterate(connection):
-    client = connection
-    # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
-    db = client.get_database("employee_list")
-    # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
-    db_employee = db.get_collection("employees")
-    #Iterates through the documents
-    for employee in db_employee.find():
-        print(employee)
-    print("Docs listed with succes!")
-
-def delete(connection):
-    client = connection
-    # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
-    db = client.get_database("employee_list")
-    # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
-    db_employee = db.get_collection("employees")
-    print("Preparing to delete the documents with the employees that have the age bigger than 30....\n")
-    # Deletes the documents whose "age" key has values greater than 30
-    for employee in db_employee.find():
-        db_employee.delete_many({"age": {"$gt": 30}})
-    print("Task finished!Docs deleted")
-
-def sort(connection):
-    client = connection
-    # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
-    db = client.get_database("employee_list")
-    # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
-    db_employee = db.get_collection("employees")
-    # Iterates through the documents and sorts them by age (ascending
-    for employee in db_employee.find({}).sort("age"):
-        print(employee)
-    print("Task finished...\n Exiting...")
-
-connect = con()
 def data(connection):
     client = connection
     # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
@@ -176,7 +101,77 @@ def data(connection):
     #Inserts the dictionaries as db collections
     db_employee.insert_many([empl_1, empl_2, empl_3, empl_4, empl_5, empl_6, empl_7, empl_8, empl_9, empl_10])
 
+def timestamp(connection):
+    client = connection
+    #Using some prints as loggers to show the UNIX time and convert it to different time formats:
+    timestamp = int(time.time())
+    print("This is the UNIX timestamp: " + str(timestamp))
+    Format = datetime.fromtimestamp(timestamp)
+    print("See the conversion for the UNIX timestamps from the documents down bellow: ")
+    print('TIMESTAMP')
 
+
+def format(connection):
+    client = connection
+    # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
+    db = client.get_database("employee_list")
+    # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
+    db_employee = db.get_collection("employees")
+    # Conversion of UNIX to romanian date format, printing it and updating it to the collections
+    Format = time.strftime("%d/%m/%Y, %H:%M:%S")
+    print(Format + " --Ro Format")
+    for employee in db_employee.find():
+        db_employee.update_many({}, {"$set": {"ro_time": Format}})
+
+    # Conversion of UNIX to american date format, printing it and updating it to the collections
+    Format = time.strftime("%m-%d-%Y, %H:%M:%S")
+    print(Format + " --Us Format")
+    for employee in db_employee.find():
+        db_employee.update_many({}, {"$set": {"us_time": Format}})
+
+    # Conversion of UNIX to british date format, printing it and updating it to the collections
+    Format = time.strftime("%d/%m/%Y, %H:%M:%S")
+    print(Format + " --Uk Format")
+    for employee in db_employee.find():
+        db_employee.update_many({}, {"$set": {"uk_time": Format}})
+
+    print("Updating the documents with the specified formats....\n Please wait!")
+
+def iterate(connection):
+    client = connection
+    # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
+    db = client.get_database("employee_list")
+    # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
+    db_employee = db.get_collection("employees")
+    #Iterates through the documents
+    for employee in db_employee.find():
+        print(employee)
+    print("Docs listed with succes!")
+
+def delete(connection):
+    client = connection
+    # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
+    db = client.get_database("employee_list")
+    # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
+    db_employee = db.get_collection("employees")
+    print("Preparing to delete the documents with the employees that have the age bigger than 30....\n")
+    # Deletes the documents whose "age" key has values greater than 30
+    for employee in db_employee.find():
+        db_employee.delete_many({"age": {"$gt": 30}})
+    print("Task finished!Docs deleted")
+
+def sort(connection):
+    client = connection
+    # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
+    db = client.get_database("employee_list")
+    # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
+    db_employee = db.get_collection("employees")
+    # Iterates through the documents and sorts them by age (ascending
+    for employee in db_employee.find({}).sort("age"):
+        print(employee)
+    print("Task finished...\n Exiting...")
+
+connect = con()
 timestamp(connect)
 format(connect)
 iterate(connect)
