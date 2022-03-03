@@ -27,7 +27,7 @@ def con():
     return client
 
 def timestamp(connection):
-
+    client = connection
     #Using some prints as loggers to show the UNIX time and convert it to different time formats:
     timestamp = int(time.time())
     print("This is the UNIX timestamp: " + str(timestamp))
@@ -37,7 +37,7 @@ def timestamp(connection):
 
 
 def format(connection):
-
+    client = connection
     # Conversion of UNIX to romanian date format, printing it and updating it to the collections
     Format = time.strftime("%d/%m/%Y, %H:%M:%S")
     print(Format + " --Ro Format")
@@ -59,14 +59,14 @@ def format(connection):
     print("Updating the documents with the specified formats....\n Please wait!")
 
 def iterate(connection):
-
+    client = connection
     #Iterates through the documents
     for employee in db_employee.find():
         print(employee)
     print("Docs listed with succes!")
 
 def delete(connection):
-
+    client = connection
     print("Preparing to delete the documents with the employees that have the age bigger than 30....\n")
     # Deletes the documents whose "age" key has values greater than 30
     for employee in db_employee.find():
@@ -74,7 +74,7 @@ def delete(connection):
     print("Task finished!")
 
 def sort(connection):
-
+    client = connection
     # Iterates through the documents and sorts them by age (ascending
     for employee in db_employee.find({}).sort("age"):
         print(employee)
@@ -90,7 +90,7 @@ following string -- "conn_str = "mongodb://<user>:<password>@localhost:<the port
 '''
 
 
-client = connect
+
 #Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
 db = client.get_database("employee_list")
 
