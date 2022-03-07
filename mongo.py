@@ -8,6 +8,7 @@ def log():
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s <--> %(name)s <--> %(message)s')
     logger = logging.getLogger(__name__)
     return logger
+
 def con(logger):
     log = logger
     '''
@@ -18,7 +19,7 @@ def con(logger):
     # Creates a connection using pymongo.MongoClient
     client = pymongo.MongoClient(conn_str, serverSelectionTimeoutMS=5000)
 
-    # Checks if the connection was succesfully. If not, it exits the program and shows the error.
+    # Checks if the connection was successfully. If not, it exits the program and shows the error.
     try:
         log.info(client.server_info())
     except Exception as e:
@@ -28,12 +29,14 @@ def con(logger):
 
     return client
 
-def data(connection):
+
+def data(connection,logger):
+    log = logger
     client = connection
     # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
     db = client.get_database("employee_list")
     # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
-    db_employee = db.get_collection("employees")
+    db_employee = db.get_collection('employees')
     empl_1 = {
             "timestamp_UNIX" : int(time.time()),
             "_id" : "empl0001",
@@ -84,7 +87,6 @@ def data(connection):
         }
     empl_9 = {
             "timestamp_UNIX" : int(time.time()),
-
             "_id" : "empl0009",
             "name" : "Kevin",
             "age" : 25
@@ -95,8 +97,14 @@ def data(connection):
             "name" : "Senna",
             "age" : 19
         }
-    #Inserts the dictionaries as db collections
-    db_employee.insert_many([empl_1, empl_2, empl_3, empl_4, empl_5, empl_6, empl_7, empl_8, empl_9, empl_10])
+
+    try:
+        db_employee.insert_many([empl_1,empl_2,empl_3,empl_4,empl_5,empl_6,empl_7,empl_8,empl_9,empl_10])
+    except Exception as e:
+        log.critical(e)
+        log.critical("-----EXITING-----")
+        sys.exit(-1)
+
 
 def timestamp(logger):
     log = logger
@@ -105,34 +113,33 @@ def timestamp(logger):
     log.info("This is the UNIX timestamp: " + str(timestamp))
     Format = datetime.fromtimestamp(timestamp)
     log.info("See the conversion for the UNIX timestamps from the documents down bellow: ")
-    log.info('TIMESTAMP')
+
 
 
 def format(connection, logger):
-    log= logger
+    log = logger
     client = connection
     # Creates the database named 'employee_list' -- db = client.get_database("your_database_name")
     db = client.get_database("employee_list")
     # Creates a collection named 'employees' in the 'employees_list' -- collection_name = dbname["your_collection_name"]
     db_employee = db.get_collection("employees")
     # Conversion of UNIX to romanian date format, printing it and updating it to the collections
-
-    Format = time.strftime("%d/%m/%Y, %H:%M:%S")
-    log.info(Format + " --Ro Format")
+    format_ro = time.strftime("%d/%m/%Y, %H:%M:%S")
+    log.info(format_ro + " --Ro Format")
     for employee in db_employee.find():
-        db_employee.update_many({}, {"$set": {"ro_time": Format}})
+        db_employee.update_many({}, {"$set": {"ro_time": format_ro}})
 
     # Conversion of UNIX to american date format, printing it and updating it to the collections
-    Format = time.strftime("%m-%d-%Y, %H:%M:%S")
-    log.info(Format + " --Us Format")
+    format_us = time.strftime("%m-%d-%Y, %H:%M:%S")
+    log.info(format_us + " --Us Format")
     for employee in db_employee.find():
-        db_employee.update_many({}, {"$set": {"us_time": Format}})
+        db_employee.update_many({}, {"$set": {"us_time": format_us}})
 
     # Conversion of UNIX to british date format, printing it and updating it to the collections
-    Format = time.strftime("%d/%m/%Y, %H:%M:%S")
-    log.info(Format + " --Uk Format")
+    format_uk = time.strftime("%d/%m/%Y, %H:%M:%S")
+    log.info(format_uk + " --Uk Format")
     for employee in db_employee.find():
-        db_employee.update_many({}, {"$set": {"uk_time": Format}})
+        db_employee.update_many({}, {"$set": {"uk_time": format_uk}})
 
     log.info("Updating the documents with the specified formats....\n Please wait!")
 
@@ -162,6 +169,8 @@ def delete_by_age(connection,parameter, logger):
     for employee in db_employee.find():
         db_employee.delete_many({"age": {"$gt": int(parameter)}})
     log.info("Task finished!Docs deleted")
+
+
 def sort(connection, parameter, logger):
     log = logger
     client = connection
@@ -173,11 +182,13 @@ def sort(connection, parameter, logger):
         log.info(employee)
     log.info("Task finished...\n Exiting...")
 
+
+
 logger = log()
 connect = con(logger)
-data(connect)
+data(connect, logger)
 timestamp(logger)
 format(connect, logger)
 iterate(connect, logger)
-delete_by_age(connect, 27, logger)
-sort(connect, "name", logger)
+delete_by_age(connect, 30, logger)
+sort(connect, 'age', logger)
