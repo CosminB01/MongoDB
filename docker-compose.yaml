@@ -5,16 +5,16 @@ services:
     container_name: 
       mongodb
     environment: 
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=password
-    volumes: 
+      - MONGO_INITDB_ROOT_USERNAME=UsvEr4VX6ShZRsqW
+      - MONGO_INITDB_ROOT_PASSWORD=4tYwbrdXJYpS74TZ
+    volumes:
       - mongodb-data:/data/db
     networks:
       - mongodb_network
     ports: 
       - 27017:27017
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo 172.17.0.1:27017/admin --quiet
+      test: echo 'db.runCommand("ping").ok' | mongo 172.17.0.1:27017/test --quiet
       interval: 30s
       timeout: 10s
       retries: 3
@@ -25,10 +25,10 @@ services:
     environment:
       - ME_CONFIG_MONGODB_SERVER=mongodb
       - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
-      - ME_CONFIG_BASICAUTH_USERNAME=admin
-      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=UsvEr4VX6ShZRsqW
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=4tYwbrdXJYpS74TZ
+      - ME_CONFIG_BASICAUTH_USERNAME=Y9stpgUXvK7zT3Ud
+      - ME_CONFIG_BASICAUTH_PASSWORD=yUT7bUbGh2Z3dYTm
     volumes: 
       - mongodb-data
     depends_on: 
@@ -38,7 +38,7 @@ services:
     ports:
       - 8081:8081
     healthcheck:
-      test: wget --quiet --tries=3 --spider http://admin:admin123@172.17.0.1:8081 || exit 1
+      test: wget --quiet --tries=3 --spider http://Y9stpgUXvK7zT3Ud:yUT7bUbGh2Z3dYTm@192.168.100.100:8081 || exit 1
       interval: 30s
       timeout: 10s
       retries: 3
